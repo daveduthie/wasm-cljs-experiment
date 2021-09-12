@@ -1,3 +1,10 @@
 /cljs-app/.cpcache/
 /cljs-app/.rebel_readline_history
 /cljs-app/target/
+
+wasm-calc/target
+wasm-calc/**/*.rs.bk
+wasm-calc/Cargo.lock
+wasm-calc/bin/
+wasm-calc/pkg/
+wasm-calc/wasm-pack.log
