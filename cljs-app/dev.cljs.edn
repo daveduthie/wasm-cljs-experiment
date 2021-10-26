@@ -1,4 +1,5 @@
-^{:watch-dirs ["src"]}
+^{:watch-dirs ["src"]
+  :open-url   false}
 {:main       hello-world.core
  :target     :bundle
 

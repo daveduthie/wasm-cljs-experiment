@@ -11,3 +11,4 @@ wasm-calc/wasm-pack.log
 /cljs-app/node_modules/
 /cljs-app/.log/
 /cljs-app/.lsp/*.db
+/cljs-app/.nrepl-port
