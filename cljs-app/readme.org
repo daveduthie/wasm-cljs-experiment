@@ -1,0 +1,5 @@
+* Set up
+
+I've pulled in a local copy of mustache-rs. Run =npm link= in the
+=pkg= directory containing the built mustache lib, then run =npm link
+mustache-rs= in this directory.
