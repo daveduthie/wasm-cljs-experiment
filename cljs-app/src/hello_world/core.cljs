@@ -19,23 +19,32 @@
   ["Hello {{ calc.who }}"
    "Hello {{ calc.whoElse }} {{ calc.doesnt.resolve.to.anything }}"])
 
+(def initial-context
+  {})
+
+(def calcs
+  {:who     (fn [_] "The Who")
+   :whoElse (fn [_] "Elsie")})
+
 (defn mustache-test
   []
   (let [*state (r/atom nil)]
-    (go (<! (set-context #js {:calc #js {:who "The Who", :whoElse "Elsie"}}))
-        (reset! *state
-                (map (fn [tpl mustache]
-                       {:tpl      tpl
-                        :deps     (set (.deps mustache #js ["calc"]))
-                        :rendered (.render mustache)})
-                     mustache-templates
-                     (<p! (js/Promise.all (map template mustache-templates))))))
+    (go (let [mustaches (<p! (js/Promise.all (map template mustache-templates)))
+              deps      (set (mapcat #(.deps % #js ["calc"]) mustaches))
+              calcs     (reduce (fn [acc dep]
+                                  (let [fun (or (get calcs (keyword dep))
+                                                (constantly nil))]
+                                (assoc acc dep (fun initial-context))))
+                                {} deps)]
+          (<! (set-context (clj->js (assoc initial-context :calc calcs))))
+          (reset! *state (map #(.render %) mustaches))))
     (fn []
       [:ul
-       (doall (map (fn [{:keys [tpl deps rendered]}]
+       (doall (map (fn [rendered tpl]
                      [:li {:key rendered}
-                      tpl " => "
-                      rendered " (depends on " [:code (pr-str deps)] ")"]) @*state))])))
+                      tpl " => " rendered])
+                   @*state
+                   mustache-templates))])))
 
 (defn simple-component []
   [:div

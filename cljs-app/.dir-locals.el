@@ -1,1 +1,1 @@
-((clojure-mode . (cider-default-cljs-repl . figwheel)))
+((clojure-mode . ((cider-default-cljs-repl . figwheel-main))))
